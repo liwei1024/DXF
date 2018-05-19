@@ -870,8 +870,6 @@ void InitRemoteCall()
 
 	Send_区域CALL(0, false);
 
-	Send_通关确认(false);
-
 	Send_组包买物(0, false);
 
 	Send_测试组包(false);

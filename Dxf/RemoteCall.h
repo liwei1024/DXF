@@ -47,8 +47,6 @@ void Send_组包提交(int 任务ID, bool is_send = true);
 
 void Send_区域CALL(int 任务ID, bool is_send = true);
 
-void Send_通关确认(bool is_send = true);
-
 void Send_测试组包(bool is_send = true);
 
 void RemoteCall(const char * name, LPCVOID fun, LPCVOID params, int p_size, int size, bool is_send);
