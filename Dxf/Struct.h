@@ -74,7 +74,8 @@ struct 任务结构
 	int 任务类型;
 	int 任务偏移;
 	int 任务ID;
-	int 任务条件;
+	int 任务副本;
+	char *任务条件;
 	char *任务名称;
 };
 

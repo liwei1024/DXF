@@ -7,6 +7,8 @@
 #define NewCodeAddr		0x400404
 #define HookAddr		0x400408
 
+int _HookAddr = 0;
+
 void  __declspec(naked) NewCode()
 {
 	__asm
@@ -16,13 +18,13 @@ void  __declspec(naked) NewCode()
 		je newcode
 		jmp originalcode
 		newcode :
-		mov ecx, dword ptr[ebp + 0x10]
+			mov ecx, dword ptr[ebp + 0x10]
 			call ecx
 			add esp, 0x8
 			pop ebp
 			ret
-			originalcode :
-		mov eax, fs : [00000000]
+		originalcode :
+			mov eax, fs : [00000000]
 			push eax
 			push ebx
 			push esi
@@ -32,6 +34,8 @@ void  __declspec(naked) NewCode()
 	}
 }
 
+
+
 void __declspec(naked) SetHookAddr()
 {
 	__asm
@@ -40,6 +44,21 @@ void __declspec(naked) SetHookAddr()
 		mov eax, dword ptr[eax]
 		jmp eax
 	}
+}
+
+void __declspec(naked) ReHook()
+{
+	__asm {
+		mov eax, fs : [00000000]
+		push eax
+		push ebx
+		push esi
+	}
+}
+
+bool ReHookMsg() 
+{
+	return pApi.writeMemory(_HookAddr, ReHook, 0x9);
 }
 
 void HookWindowsMsg()
@@ -66,7 +85,7 @@ void HookWindowsMsg()
 		exit(1);
 	}
 	printf("Get HookAddr ...\n");
-	int _HookAddr = ToolsApi::getModleAddrByPid(pApi.ProcessId, L"CrossAdapter4DNF.dll") + 0x12DAA;
+	_HookAddr = ToolsApi::getModleAddrByPid(pApi.ProcessId, L"CrossAdapter4DNF.dll") + 0x12DAA;//CrossAdapter4DNF.dll+0x12DAA
 	if (!_HookAddr) {
 		printf("Get hookAddr 失败!\n");
 		system("pause");
@@ -415,17 +434,17 @@ void __declspec(naked) Asm_存金入库()
 
 void __declspec(naked) Asm_组包剧情()
 {
-	Asm_缓冲CALL(16);
-	Asm_密包CALL(参数地址, 4, true);
-	Asm_密包CALL(参数地址 + 0x4, 1, true);
-	Asm_密包CALL(0, 2, false);
-	Asm_密包CALL(0, 1, false);
-	Asm_密包CALL(0, 1, false);
-	Asm_密包CALL(0, 3, false);
-	Asm_密包CALL(参数地址 + 0x8, 2, true);
-	Asm_密包CALL(0, 1, false);
-	Asm_密包CALL(0, 3, false);
-	Asm_发包CALL();
+	Asm_缓冲CALL(16)
+	Asm_密包CALL(参数地址, 3, true)//地图ID
+	Asm_密包CALL(0, 1, false)//地图难度
+	Asm_密包CALL(0, 2, false)
+	Asm_密包CALL(0, 1, false)
+	Asm_密包CALL(0, 1, false)
+	Asm_密包CALL(65535, 2, false)
+	Asm_密包CALL(0, 3, false)
+	Asm_密包CALL(0, 1, false)
+	Asm_密包CALL(参数地址 + 0x4, 3, true)//任务id
+	Asm_发包CALL()
 	__asm ret
 }
 
@@ -727,16 +746,14 @@ void Send_释放CALL(int 触发对象, int 代码, int 伤害, int x, int y, int z, bool i
 	RemoteCall(__FUNCTION__, Asm_释放CALL, &params, sizeof(params), 1024, is_send);
 }
 
-void Send_组包剧情(int 地图ID, int 副本难度, int 任务ID, bool is_send)
+void Send_组包剧情(int 地图ID,  int 任务ID, bool is_send)
 {
 	struct
 	{
 		int 地图ID;
-		int 副本难度;
 		int 任务ID;
 	}params;
 	params.地图ID = 地图ID;
-	params.副本难度 = 副本难度;
 	params.任务ID = 任务ID;
 	RemoteCall(__FUNCTION__, Asm_组包剧情, &params, sizeof(params), 1024, is_send);
 }
@@ -760,6 +777,7 @@ void Send_组包接受(int 任务ID, bool is_send)
 	{
 		int 任务ID;
 	}params;
+	params.任务ID = 任务ID;
 	RemoteCall(__FUNCTION__, Asm_组包接受, &params, sizeof(params), 1024, is_send);
 }
 
@@ -769,6 +787,7 @@ void Send_组包完成(int 任务ID, bool is_send)
 	{
 		int 任务ID;
 	}params;
+	params.任务ID = 任务ID;
 	RemoteCall(__FUNCTION__, Asm_组包完成, &params, sizeof(params), 1024, is_send);
 }
 
@@ -778,6 +797,7 @@ void Send_组包提交(int 任务ID, bool is_send)
 	{
 		int 任务ID;
 	}params;
+	params.任务ID = 任务ID;
 	RemoteCall(__FUNCTION__, Asm_组包提交, &params, sizeof(params), 1024, is_send);
 }
 
@@ -787,6 +807,7 @@ void Send_区域CALL(int 任务ID, bool is_send)
 	{
 		int 任务ID;
 	}params;
+	params.任务ID = 任务ID;
 	RemoteCall(__FUNCTION__, Asm_区域CALL, &params, sizeof(params), 1024, is_send);
 }
 
@@ -856,7 +877,7 @@ void InitRemoteCall()
 
 	Send_存金入库(0, false);
 
-	Send_组包剧情(0, 0, 0, false);
+	Send_组包剧情(0, 0, false);
 
 	Send_释放CALL(0, 0, 0, 0, 0, 0, false);
 

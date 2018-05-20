@@ -122,7 +122,7 @@ void BeastQuest::坐标过图(int 方向ID)
 		DWORD 临时数据 = pApi.readInteger(商店基址 - 8);
 		临时数据 = pApi.readInteger(临时数据 + 时间基址);
 		临时数据 = pApi.readInteger(临时数据 + 坐标顺图偏移2);
-		int 坐标结构 = 临时数据 + (方向ID + 方向ID * 4) * 8 + 坐标顺图偏移1;
+		int 坐标结构 = 临时数据 + (方向ID + 方向ID * 8) * 4 + 坐标顺图偏移1 + 方向ID * 4;
 		int x, y, xF, yF, cx, cy;
 		x = pApi.readInteger(坐标结构 + 0);
 		y = pApi.readInteger(坐标结构 + 4);
@@ -150,10 +150,7 @@ void BeastQuest::坐标过图(int 方向ID)
 		}
 		Send_坐标CALL(人物指针, cx, cy, 0);
 		Sleep(200);
-		Send_坐标CALL(人物指针, x + xF, y, 0);
-
-		//Send_坐标CALL(人物指针, x + xF/2, y, 0);
-
+		Send_坐标CALL(人物指针, x + xF/2, y, 0);
 	}
 	catch (...)
 	{

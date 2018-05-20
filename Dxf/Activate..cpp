@@ -35,6 +35,11 @@ LRESULT CALLBACK Keypress(int nCode, WPARAM wParam, LPARAM lParam)
 			if (p->lParam == VK_F3) {
 				Send_测试组包();
 			}
+			if (p->lParam == VK_F4) {
+				任务遍历测试();
+			}
+
+			
 
 			//if (p->lParam == VK_F2) Send_存金入库(10000);
 			if (p->lParam == 'l' || p->lParam == 'L')
@@ -107,4 +112,7 @@ void Activate()
 void ProcessClose()
 {
 	KeypressEnd();
+	if (ReHookMsg()) {
+		pApi.freeAllAlloc();
+	}
 }

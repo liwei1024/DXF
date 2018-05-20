@@ -17,10 +17,10 @@ public:
 	/*提升权限*/
 	static bool WINAPI enablePrivileges();
 	/*获取系统API地址*/
-	static int getWinApiAddr(const char * modle_name, const char * fun_name);
+	static int getWinApiAddr(LPCSTR modle_name, LPCSTR fun_name);
 
 	static byte * vectorByteToByte(vector<byte> bytes);
 
-	vector<byte> byteToVectorByte(byte * bytes, int len);
+	static vector<byte> byteToVectorByte(byte * bytes, int len);
 };
 

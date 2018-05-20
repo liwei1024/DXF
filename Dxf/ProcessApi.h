@@ -10,6 +10,7 @@ class ProcessApi
 public:
 	ProcessApi(LPCWSTR lpClassName = L"地下城与勇士", LPCWSTR lpWindowName = L"地下城与勇士");
 	~ProcessApi();
+	void InitHookRestore();
 	/*读进程内存*/
 	bool readMemory(int lpBaseAddress, LPVOID lpBuffer, int nSize);
 	/*读进程字节型*/
@@ -64,5 +65,6 @@ public:
 	HANDLE hProcess = NULL;
 	/*申请的内存地址存放容器*/
 	map<const char*, MemoryStruct>alloc_memory_map_box;
+
 };
 

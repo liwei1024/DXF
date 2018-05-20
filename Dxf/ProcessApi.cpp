@@ -11,6 +11,9 @@ ProcessApi::ProcessApi(LPCWSTR lpClassName, LPCWSTR lpWindowName)
 	if (ProcessId == 0) ::GetWindowThreadProcessId(hWnd, &ProcessId);
 
 	if (hProcess == 0) hProcess = ::OpenProcess(PROCESS_ALL_ACCESS, false, ProcessId);
+
+	//InitHookRestore();
+
 }
 
 ProcessApi::~ProcessApi()
@@ -20,18 +23,50 @@ ProcessApi::~ProcessApi()
 	//system("pause");
 }
 
+void ProcessApi::InitHookRestore()
+{
+	//ntdll.LdrInitializeThunk 还原钩子
+	vector<byte> buff;
+	int addr;
+	/*addr = ToolsApi::getWinApiAddr("ntdll.dll", "LdrInitializeThunk");
+	buff = readBytes(addr, 5);
+	if (buff[0] != 0x8b) {
+		writeBytes(addr, { 0x8b, 0xff, 0x55, 0x8b, 0xec });
+	}*/
+	addr = ToolsApi::getWinApiAddr("ntdll.dll", "NtQueryVirtualMemory");
+	buff = readBytes(addr, 5);
+	if (buff[0] == 0xe9) {
+		writeBytes(addr, {0xb8,0x23,0,0,0 });
+	}
+}
+
+
+
 bool ProcessApi::readMemory(int lpBaseAddress, LPVOID lpBuffer, int nSize)
 {
+	int addr = ToolsApi::getWinApiAddr((LPCSTR)"ntdll.dll", (LPCSTR)"NtQueryVirtualMemory");
 	SIZE_T lpNumberOfBytesRead;
-	if (!ReadProcessMemory(hProcess, (LPCVOID)lpBaseAddress, lpBuffer, (SIZE_T)nSize, &lpNumberOfBytesRead)) {
-		printf("读取 %x 内存时失败！\n", lpBaseAddress);
-		return false;
+	vector<byte> buff;
+	if (addr) {
+		byte * bytes = new byte[5];
+		memset(bytes, 0, 5);
+		if (ReadProcessMemory(hProcess, (LPCVOID)addr, bytes, 5, &lpNumberOfBytesRead)) {
+			buff = ToolsApi::byteToVectorByte(bytes, 5);
+			if (writeBytes(addr, { 0xb8,0x23,0,0,0 })) {
+				if (!ReadProcessMemory(hProcess, (LPCVOID)lpBaseAddress, lpBuffer, (SIZE_T)nSize, &lpNumberOfBytesRead)) {
+					printf("读取 %x 内存时失败！\n", lpBaseAddress);
+					return false;
+				}
+				if (lpNumberOfBytesRead != nSize) {
+					printf("读取 %x 内存时实际读取的长度与要读取的长度不一致！\n", lpBaseAddress);
+					return false;
+				}
+				writeBytes(addr, buff);
+				return true;
+			}
+		}
 	}
-	if (lpNumberOfBytesRead != nSize) {
-		printf("读取 %x 内存时实际读取的长度与要读取的长度不一致！\n", lpBaseAddress);
-		return false;
-	}
-	return true;
+	return false;
 }
 
 byte ProcessApi::readByte(int lpBaseAddress)

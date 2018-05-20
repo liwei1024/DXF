@@ -138,7 +138,7 @@ bool ToolsApi::enablePrivileges()
 	return TRUE;
 }
 
-int ToolsApi::getWinApiAddr(const char* modle_name, const char* fun_name)
+int ToolsApi::getWinApiAddr(LPCSTR modle_name, LPCSTR fun_name)
 {
 	return (int)GetProcAddress(GetModuleHandleA(modle_name), fun_name);
 }

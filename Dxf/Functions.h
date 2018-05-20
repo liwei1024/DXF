@@ -16,9 +16,13 @@ void 装备处理();
 
 bool 是否开门();
 
+void 完成任务(int 任务ID);
+
 void 任务遍历测试();
 
 int 获取主线任务ID();
+
+void 区域_CALL(int 任务ID);
 
 void 内存按键(int K_Code, int s = 100);
 

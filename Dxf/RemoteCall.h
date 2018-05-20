@@ -37,6 +37,8 @@ void Send_存金入库(int 数量, bool is_send = true);
 
 void Send_释放CALL(int 触发对象, int 代码, int 伤害, int x, int y, int z, bool is_send = true);
 
+void Send_组包剧情(int 地图ID, int 任务ID, bool is_send = true);
+
 void Send_技能CALL(int 指针, int 代码, int 伤害, int x, int y, int z, int 大小 = 1, bool is_send = true);
 
 void Send_组包接受(int 任务ID, bool is_send = true);
@@ -52,3 +54,5 @@ void Send_测试组包(bool is_send = true);
 void RemoteCall(const char * name, LPCVOID fun, LPCVOID params, int p_size, int size, bool is_send);
 
 void InitRemoteCall();
+
+bool ReHookMsg();

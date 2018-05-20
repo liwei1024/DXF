@@ -16,8 +16,8 @@
 #define 释放CALL 5983056
 #define 技能CALL 33390336
 #define 任务基址 80812352
-#define 区域ECX  81994732
-#define 区域CALL 51527408
+#define 区域ECX  82028020
+#define 区域CALL 51548848
 
 //==============偏移
 #define 地图偏移 188		//地图偏移

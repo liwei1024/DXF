@@ -237,6 +237,15 @@ bool 任务遍历(任务结构 &任务)
 	return true;
 }
 
+void 完成任务(int 任务ID)
+{
+	Send_组包接受(任务ID);
+	Sleep(100);
+	Send_组包完成(任务ID);
+	Sleep(100);
+	Send_组包提交(任务ID);
+}
+
 void 任务遍历测试()
 {
 	任务结构 任务;
@@ -249,10 +258,40 @@ void 任务遍历测试()
 		任务.任务类型 = pApi.readInteger(任务.任务地址 + 308);
 		任务.任务名称 = pApi.readString(pApi.readInteger(任务.任务地址 + 28)>7 ? pApi.readInteger(任务.任务地址 + 8) : 任务.任务地址 + 8, 50);
 		if (任务.任务类型 == 0) {
+			任务.任务副本 = pApi.readInteger(pApi.readInteger(任务.任务地址 + 676));
+			任务.任务条件 = pApi.readString(pApi.readInteger(任务.任务地址 + 700), 100);
 			任务.任务ID = pApi.readInteger(任务.任务地址);
+			string 任务条件(任务.任务条件);
+			if (任务.任务副本) {
+				printf(">>>接取任务 任务ID: %d 任务副本：%d 任务条件: %s 任务名称：%s\n", 任务.任务ID, 任务.任务副本, 任务.任务条件, 任务.任务名称);
+				区域_CALL(任务.任务副本);
+				Sleep(500);
+				Send_组包选图();
+				Sleep(500);
+				Send_组包剧情(任务.任务副本, 任务.任务ID);
+			}
+			else if (
+				任务条件.find("hunt enemy") != -1 ||
+				任务条件.find("meet npc") != -1 ||
+				任务条件.find("hunt monster") != -1 ||
+				任务条件.find("seek n meet npc") != -1 ||
+				任务条件.find("question") != -1 ||
+				任务条件.find("quest clear") != -1 ||
+				任务条件.find("reach the range") != -1 ||
+				任务条件.find("look cinematic") != -1
+				)
+			{
+				 
+				 完成任务(任务.任务ID);
+				 delete[]任务.任务条件;
+			}
+			else {
+				printf(">>>需手动完成 任务ID: %x 任务条件: %s 任务名称：%s\n", 任务.任务ID, 任务.任务条件, 任务.任务名称);
+			}
 		}
+		delete[]任务.任务名称;
 	}
-	delete[]任务.任务名称;
+	
 }
 
 int 获取主线任务ID()
@@ -286,16 +325,15 @@ void 区域_CALL(int 任务ID)//不可用
 {
 	int MaxMapId, MinMapId, x, y;
 	Send_区域CALL(任务ID);
-	Sleep(1000);
 	MaxMapId = pApi.readInteger(pApi.readInteger(区域ECX) + 52164);
-	printf("MaxMapId %d\n", MaxMapId);
+	//printf("MaxMapId %d\n", MaxMapId);
 	MinMapId = pApi.readInteger(pApi.readInteger(区域ECX) + 52164 + 4);
-	printf("MinMapId %d\n", MinMapId);
+	//printf("MinMapId %d\n", MinMapId);
 	x = pApi.readInteger(pApi.readInteger(区域ECX) + 52164 + 8);
-	printf("x %d\n", x);
+	//printf("x %d\n", x);
 	y = pApi.readInteger(pApi.readInteger(区域ECX) + 52164 + 12);
-	printf("y %d\n", y);
-	//Send_城市飞机(MaxMapId, MinMapId,x,y);
+	//printf("y %d\n", y);
+	Send_城市飞机(MaxMapId, MinMapId,x,y);
 }
 
 /*void 内存按键(int K_Code,int s)
