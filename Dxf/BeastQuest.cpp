@@ -150,7 +150,7 @@ void BeastQuest::坐标过图(int 方向ID)
 		}
 		Send_坐标CALL(人物指针, cx, cy, 0);
 		Sleep(200);
-		Send_坐标CALL(人物指针, x + xF/2, y, 0);
+		Send_坐标CALL(人物指针, x + xF/2+70, y, 0);
 	}
 	catch (...)
 	{

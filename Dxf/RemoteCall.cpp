@@ -34,8 +34,6 @@ void  __declspec(naked) NewCode()
 	}
 }
 
-
-
 void __declspec(naked) SetHookAddr()
 {
 	__asm
@@ -256,7 +254,7 @@ void __declspec(naked) Asm_组包卖物()
 	Asm_密包CALL(0, 1, false)
 	Asm_密包CALL(参数地址 + 0x0, 2, true)
 	Asm_密包CALL(参数地址 + 0x4, 3, true)
-	Asm_密包CALL(1, 3, false)
+	Asm_密包CALL(1000, 3, false)
 	Asm_密包CALL(参数地址 + 0x8, 3, true)
 	Asm_发包CALL()
 	__asm ret

@@ -18,14 +18,18 @@ bool 是否开门();
 
 void 完成任务(int 任务ID);
 
-void 任务遍历测试();
+bool 提交任务();
+
+bool 剧情任务();
 
 int 获取主线任务ID();
 
 void 区域_CALL(int 任务ID);
 
-void 内存按键(int K_Code, int s = 100);
-
 void 模拟按键(int keyCode, int s = 100);
+
+int 取角色疲劳();
+
+int 取角色等级();
 
 

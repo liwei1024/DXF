@@ -149,6 +149,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Auto.h" />
     <ClInclude Include="BaseAddr.h" />
     <ClInclude Include="BeastQuest.h" />
     <ClInclude Include="Functions.h" />
@@ -163,6 +164,7 @@
     <ClInclude Include="Activate.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Auto.cpp" />
     <ClCompile Include="BeastQuest.cpp" />
     <ClCompile Include="Dxf.cpp" />
     <ClCompile Include="Functions.cpp" />

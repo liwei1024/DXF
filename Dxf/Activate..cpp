@@ -2,6 +2,8 @@
 #include "Activate.h"
 #include "RemoteCall.h"
 #include "Functions.h"
+#include "Auto.h"
+#include "BeastQuest.h"
 
 HHOOK g_hHook = NULL;
 DWORD g_dwMainThreadId;
@@ -18,16 +20,17 @@ LRESULT CALLBACK Keypress(int nCode, WPARAM wParam, LPARAM lParam)
 			//BeastQuest BQ;
 			if (p->lParam == VK_HOME)
 			{
-				/*全局开关.自动刷图开关 = !全局开关.自动刷图开关;
-				if (全局开关.自动刷图开关) {
-				printf("自动刷图开\n");
+				全局开关.自动剧情开关 = !全局开关.自动剧情开关;
+				if (全局开关.自动剧情开关) {
+					printf("自动剧情开\n");
 				}
 				else {
-				printf("自动刷图关\n");
-				}*/
+					printf("自动剧情关\n");
+				}
 			}
 			if (p->lParam == VK_F1) {
-				装备处理();
+				BeastQuest BQ;
+				BQ.智能过图();
 			}
 			if (p->lParam == VK_F2) {
 				Send_组包买物(18402);
@@ -36,7 +39,7 @@ LRESULT CALLBACK Keypress(int nCode, WPARAM wParam, LPARAM lParam)
 				Send_测试组包();
 			}
 			if (p->lParam == VK_F4) {
-				任务遍历测试();
+				printf("%d\n",取角色疲劳());
 			}
 
 			
@@ -84,10 +87,12 @@ void MainThread()
 	//BeastQuest BQ;
 	while (true)
 	{
-		/*int status = pApi.readInteger(游戏状态);
-		if (status == 3 && 全局开关.自动刷图开关) {
-		BQ.图内操作();
-		}*/
+		if (全局开关.自动剧情开关) {
+			自动剧情();
+		}
+		else if(全局开关.自动刷图开关) {
+			自动刷图();
+		}
 		Sleep(100);
 	}
 }
