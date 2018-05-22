@@ -20,11 +20,7 @@ struct 遍历结构
 	Coordinate 人物坐标;
 };
 
-struct 开关
-{
-	bool 自动入包;
-	bool 自动刷图开关;
-};
+
 
 struct 地图数据//坐标类型
 {
@@ -79,7 +75,15 @@ struct 任务结构
 	char *任务名称;
 };
 
+struct 开关
+{
+	bool 自动入包 = false;
+	bool 自动剧情开关 = false;
+	bool 自动刷图开关 = false;
+};
+
 struct 全局变量
 {
-	int 刷图计次;
+	int 刷图计次 = 0;
+	int 当前角色 = 0;
 };

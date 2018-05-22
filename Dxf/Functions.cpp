@@ -97,37 +97,27 @@ void Encode(int addr, int value, int type)
 
 Coordinate 获取坐标(int addr)
 {
-	try {
 		Coordinate 坐标;
 		坐标.x = (int)pApi.readFloat(addr + X坐标);
 		坐标.y = (int)pApi.readFloat(addr + Y坐标);
 		坐标.z = (int)pApi.readFloat(addr + Z坐标);
 		return 坐标;
-	}
-	catch (...)
-	{
-		printf("获取坐标 ERROR");
-	}
 }
 
 Coordinate 当前房间(void)
 {
-	try {
-		Coordinate xy;
-		int 一级地址;
-		一级地址 = pApi.readInteger(pApi.readInteger(pApi.readInteger(房间编号) + 时间基址) + 204);
-		xy.x = pApi.readInteger(一级地址 + 当前房间X);
-		xy.y = pApi.readInteger(一级地址 + 当前房间Y);
-		return xy;
-	}
-	catch (...) {
-		printf("当前房间 ERROR\n");
-	}
+	Coordinate xy;
+	int 一级地址;
+	一级地址 = pApi.readInteger(pApi.readInteger(pApi.readInteger(房间编号) + 时间基址) + 204);
+	xy.x = pApi.readInteger(一级地址 + 当前房间X);
+	xy.y = pApi.readInteger(一级地址 + 当前房间Y);
+	return xy;
+	
 }
 
 Coordinate BOSS房间(void)
 {
-	try {
+	
 		Coordinate yx;
 		int 一级地址;
 		一级地址 = pApi.readInteger(pApi.readInteger(pApi.readInteger(房间编号) + 时间基址) + 204);
@@ -136,10 +126,6 @@ Coordinate BOSS房间(void)
 			yx.y = Decode(一级地址 + BOSS房间Y);
 		}
 		return yx;
-	}
-	catch (...) {
-		printf("BOSS房间 ERROR\n");
-	}
 }
 
 bool 是否在BOSS房(void)
@@ -246,7 +232,24 @@ void 完成任务(int 任务ID)
 	Send_组包提交(任务ID);
 }
 
-void 任务遍历测试()
+bool 提交任务()
+{
+	任务结构 任务;
+	if (!任务遍历(任务)) {
+		printf("任务遍历失败\n");
+	}
+	for (int i = 0; i < 任务.任务数量; i++)
+	{
+		任务.任务地址 = pApi.readInteger(任务.首地址 + i * 4);
+		任务.任务类型 = pApi.readInteger(任务.任务地址 + 308);
+		if (任务.任务类型 == 0) {
+			任务.任务ID = pApi.readInteger(任务.任务地址);
+			Send_组包提交(任务.任务ID);
+		}
+	}
+}
+
+bool 剧情任务()
 {
 	任务结构 任务;
 	if (!任务遍历(任务)) {
@@ -269,6 +272,7 @@ void 任务遍历测试()
 				Send_组包选图();
 				Sleep(500);
 				Send_组包剧情(任务.任务副本, 任务.任务ID);
+				return true;
 			}
 			else if (
 				任务条件.find("hunt enemy") != -1 ||
@@ -284,14 +288,17 @@ void 任务遍历测试()
 				 
 				 完成任务(任务.任务ID);
 				 delete[]任务.任务条件;
+				 return true;
 			}
 			else {
+				
 				printf(">>>需手动完成 任务ID: %x 任务条件: %s 任务名称：%s\n", 任务.任务ID, 任务.任务条件, 任务.任务名称);
+				return false;
 			}
 		}
 		delete[]任务.任务名称;
 	}
-	
+	return true;
 }
 
 int 获取主线任务ID()
@@ -336,98 +343,6 @@ void 区域_CALL(int 任务ID)//不可用
 	Send_城市飞机(MaxMapId, MinMapId,x,y);
 }
 
-/*void 内存按键(int K_Code,int s)
-{
-if (K_Code >= VK_F1 && K_Code <= VK_F12) {
-K_Code = K_Code + 216;
-}
-else if (K_Code == VK_Q) {
-K_Code = 285;
-}
-else if (K_Code == VK_W) {
-K_Code = 286;
-}
-else if (K_Code == VK_E) {
-K_Code = 287;
-}
-else if (K_Code == VK_R) {
-K_Code = 288;
-}
-else if (K_Code == VK_T) {
-K_Code = 289;
-}
-else if (K_Code == VK_Y) {
-K_Code = 290;
-}
-else if (K_Code == VK_U) {
-K_Code = 291;
-}
-else if (K_Code == VK_I) {
-K_Code = 292;
-}
-else if (K_Code == VK_O) {
-K_Code = 293;
-}
-else if (K_Code == VK_P) {
-K_Code = 294;
-}
-else if (K_Code == VK_A) {
-K_Code = 299;
-}
-else if (K_Code == VK_S) {
-K_Code = 300;
-}
-else if (K_Code == VK_D) {
-K_Code = 301;
-}
-else if (K_Code == VK_F) {
-K_Code = 302;
-}
-else if (K_Code == VK_G) {
-K_Code = 303;
-}
-else if (K_Code == VK_H) {
-K_Code = 304;
-}
-else if (K_Code == VK_J) {
-K_Code = 305;
-}
-else if (K_Code == VK_K) {
-K_Code = 306;
-}
-else if (K_Code == VK_L) {
-K_Code = 307;
-}
-else if (K_Code == VK_Z) {
-K_Code = 313;
-}
-else if (K_Code == VK_X) {
-K_Code = 314;
-}
-else if (K_Code == VK_C) {
-K_Code = 315;
-}
-else if (K_Code == VK_V) {
-K_Code = 316;
-}
-else if (K_Code == VK_B) {
-K_Code = 317;
-}
-else if (K_Code == VK_N) {
-K_Code = 318;
-}
-else if (K_Code == VK_M) {
-K_Code = 319;
-}
-else if (K_Code == VK_ESC) {
-K_Code = 270;
-}
-s = s + (int)(rand() % 6);
-pApi.writeBytes(pApi.readInteger(按键基址) + K_Code, { 1 });
-Sleep(s);
-pApi.writeBytes(pApi.readInteger(按键基址) + K_Code, { 0 });
-}*/
-
 void 模拟按键(int keyCode, int s)
 {
 	s = s + (int)(rand() % 6);
@@ -435,4 +350,14 @@ void 模拟按键(int keyCode, int s)
 	Sleep(s);
 	keybd_event(keyCode, MapVirtualKey(keyCode, 0), KEYEVENTF_KEYUP, 0);
 	Sleep(s);
+}
+
+int 取角色疲劳()
+{
+	return Decode(最大疲劳)- Decode(当前疲劳);
+}
+
+int 取角色等级()
+{
+	return pApi.readInteger(角色等级);
 }
