@@ -10,6 +10,9 @@
 
 int _HookAddr = 0;
 
+
+
+
 NAKED NewCode()
 {
 	__asm

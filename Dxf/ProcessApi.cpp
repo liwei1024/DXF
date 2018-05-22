@@ -254,7 +254,7 @@ bool ProcessApi::createThread(int lpStartAddress, LPVOID lpParameter)
 	return true;
 }
 
-void ProcessApi::injectDll(LPCTSTR dll_path)
+int ProcessApi::injectDll(LPCTSTR dll_path)
 {
 	int addr = allocMemory(__FUNCTION__, MAX_PATH);
 	int fun_add = ToolsApi::getWinApiAddr("kernel32.dll", "LoadLibraryW");
@@ -262,14 +262,16 @@ void ProcessApi::injectDll(LPCTSTR dll_path)
 	if (result == false) {
 		printf("InjectDll Fail!\n");
 		system("pause");
-		return;
+		return 0;
 	}
 	if (createThread(fun_add, (LPVOID)addr)) {
 		printf("注入成功！\n");
+		return addr;
 	}
 	else {
 		printf("创建线程失败！\n");
 		system("pause");
 	}
+	return 0;
 }
 

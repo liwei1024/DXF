@@ -4,13 +4,14 @@
 #define ≤‚ ‘≤Œ ˝ 0x0185E018
 
 #define NtReadVirtualMemory(hProcess,lpBaseAddress,lpBuffer,nSize,lpNumberOfBytesRead){\
+	FARPROC addr = GetProcAddress(GetModuleHandle(L"ntdll.dll"),"NtReadVirtualMemory");\
 	__asm {\
 		__asm push lpNumberOfBytesRead\
 		__asm push nSize\
 		__asm push lpBuffer\
 		__asm push lpBaseAddress\
 		__asm push hProcess\
-		__asm mov eax, 0x778B2100\
+		__asm mov eax, addr\
 		__asm call eax\
 	}\
 }
