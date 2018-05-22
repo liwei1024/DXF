@@ -245,9 +245,9 @@ void ProcessApi::freeAllAlloc()
 	}
 }
 
-bool ProcessApi::createThread(int lpThreadAttributes, int lpStartAddress, LPVOID lpParameter = NULL)
+bool ProcessApi::createThread(int lpStartAddress, LPVOID lpParameter)
 {
-	if (!CreateRemoteThreadEx(hProcess, (LPSECURITY_ATTRIBUTES)lpThreadAttributes, 0, (LPTHREAD_START_ROUTINE)lpStartAddress, lpParameter, 0, NULL, 0)) {
+	if (!CreateRemoteThreadEx(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)lpStartAddress, lpParameter, 0, NULL, 0)) {
 		printf("创建线程失败！");
 		return false;
 	}
@@ -264,7 +264,7 @@ void ProcessApi::injectDll(LPCTSTR dll_path)
 		system("pause");
 		return;
 	}
-	if (createThread(fun_add, addr)) {
+	if (createThread(fun_add, (LPVOID)addr)) {
 		printf("注入成功！\n");
 	}
 	else {

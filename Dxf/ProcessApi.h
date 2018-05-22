@@ -54,7 +54,7 @@ public:
 	/*释放所有申请的内存*/
 	void freeAllAlloc();
 	/*创建远程线程*/
-	bool createThread(int lpThreadAttributes, int lpStartAddress, LPVOID lpParameter);
+	bool createThread(int lpStartAddress, LPVOID lpParameter = NULL);
 	/*注入DLL*/
 	void injectDll(LPCTSTR dll_path);
 	/*窗口句柄*/
