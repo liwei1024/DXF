@@ -151,6 +151,7 @@ void HookWindowsMsg()
 }
 
 #define Asm_√‹‘øCALL(bytes,len){\
+	vector<byte> b = bytes;\
 	int addr = pApi.allocMemory("Asm_√‹‘øCALL",len);\
 	pApi.writeMemory(addr, bytes, len);\
 	__asm {\
