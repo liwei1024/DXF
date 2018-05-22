@@ -2,6 +2,7 @@
 #include "RemoteCall.h"
 #include "BaseAddr.h"
 
+#define NAKED void __declspec(naked)
 
 #define ReturnAddr		0x400400
 #define NewCodeAddr		0x400404
@@ -9,7 +10,10 @@
 
 int _HookAddr = 0;
 
-void  __declspec(naked) NewCode()
+
+
+
+NAKED NewCode()
 {
 	__asm
 	{
@@ -34,7 +38,7 @@ void  __declspec(naked) NewCode()
 	}
 }
 
-void __declspec(naked) SetHookAddr()
+NAKED SetHookAddr()
 {
 	__asm
 	{
@@ -44,7 +48,7 @@ void __declspec(naked) SetHookAddr()
 	}
 }
 
-void __declspec(naked) ReHook()
+NAKED ReHook()
 {
 	__asm {
 		mov eax, fs : [00000000]
@@ -149,6 +153,7 @@ void HookWindowsMsg()
 }
 
 #define Asm_密钥CALL(bytes,len){\
+	vector<byte> b = bytes;\
 	int addr = pApi.allocMemory("Asm_密钥CALL",len);\
 	pApi.writeMemory(addr, bytes, len);\
 	__asm {\
@@ -165,7 +170,7 @@ void HookWindowsMsg()
 	}\
 }
 
-void __declspec(naked) Asm_组包拾取()
+NAKED Asm_组包拾取()
 {
 	Asm_缓冲CALL(43);
 	Asm_密包CALL(参数地址, 3, true);
@@ -182,14 +187,14 @@ void __declspec(naked) Asm_组包拾取()
 	__asm ret
 }
 
-void __declspec(naked) Asm_选择角色1()
+NAKED Asm_选择角色1()
 {
 	Asm_缓冲CALL(7);
 	Asm_发包CALL();
 	__asm ret
 }
 
-void __declspec(naked) Asm_选择角色2()
+NAKED Asm_选择角色2()
 {
 	Asm_缓冲CALL(4);
 	Asm_密包CALL(参数地址, 3, true);
@@ -197,14 +202,14 @@ void __declspec(naked) Asm_选择角色2()
 	__asm ret
 }
 
-void __declspec(naked) Asm_返回角色()
+NAKED Asm_返回角色()
 {
 	Asm_缓冲CALL(0x7);
 	Asm_发包CALL();
 	__asm ret
 }
 
-void __declspec(naked) Asm_坐标CALL()
+NAKED Asm_坐标CALL()
 {
 	__asm {
 		mov eax, 参数地址
@@ -220,7 +225,7 @@ void __declspec(naked) Asm_坐标CALL()
 	}
 }
 
-void __declspec(naked) Asm_城市飞机()
+NAKED Asm_城市飞机()
 {
 	Asm_缓冲CALL(36);
 	Asm_密包CALL(参数地址, 1, true);
@@ -236,7 +241,7 @@ void __declspec(naked) Asm_城市飞机()
 	__asm ret
 }
 
-void __declspec(naked) Asm_组包卖物()
+NAKED Asm_组包卖物()
 {
 	/*Asm_缓冲CALL(22);
 	Asm_密包CALL(0, 1, false);
@@ -260,7 +265,7 @@ void __declspec(naked) Asm_组包卖物()
 	__asm ret
 }
 
-void Asm_组包买物()
+NAKED Asm_组包买物()
 {
 	Asm_缓冲CALL(21)
 	Asm_密包CALL(参数地址 + 0x0, 3, true)//物品ID
@@ -268,9 +273,10 @@ void Asm_组包买物()
 	Asm_密包CALL(2, 3, false)
 	Asm_密包CALL(1, 3, false)
 	Asm_发包CALL()
+	__asm ret
 }
 
-void __declspec(naked) Asm_组包分解()
+NAKED Asm_组包分解()
 {
 	Asm_缓冲CALL(26);
 	Asm_密包CALL(参数地址 + 0x0, 2, true);
@@ -281,7 +287,7 @@ void __declspec(naked) Asm_组包分解()
 	__asm ret
 }
 
-void __declspec(naked) Asm_组包翻牌()
+NAKED Asm_组包翻牌()
 {
 	Asm_缓冲CALL(69);
 	Asm_发包CALL();
@@ -294,7 +300,7 @@ void __declspec(naked) Asm_组包翻牌()
 	__asm ret
 }
 
-void __declspec(naked) Asm_组包进图()
+NAKED Asm_组包进图()
 {
 	Asm_缓冲CALL(16);
 	Asm_密包CALL(参数地址 + 0x0, 3, true);
@@ -310,7 +316,7 @@ void __declspec(naked) Asm_组包进图()
 	__asm ret
 }
 
-void __declspec(naked) Asm_远古进图()
+NAKED Asm_远古进图()
 {
 	__asm {
 		push 16
@@ -376,7 +382,7 @@ void __declspec(naked) Asm_远古进图()
 	}
 }
 
-void __declspec(naked) Asm_组包选图()
+NAKED Asm_组包选图()
 {
 	Asm_缓冲CALL(15);
 	Asm_密包CALL(0, 3, false);
@@ -384,14 +390,14 @@ void __declspec(naked) Asm_组包选图()
 	__asm ret
 }
 
-void __declspec(naked) Asm_组包回城()
+NAKED Asm_组包回城()
 {
 	Asm_缓冲CALL(42);
 	Asm_发包CALL();
 	__asm ret
 }
 
-void __declspec(naked) Asm_组包再次()
+NAKED Asm_组包再次()
 {
 	Asm_缓冲CALL(72);
 	Asm_密包CALL(1, 1, false);
@@ -400,7 +406,7 @@ void __declspec(naked) Asm_组包再次()
 	__asm ret
 }
 
-void __declspec(naked) Asm_领取胶囊()
+NAKED Asm_领取胶囊()
 {
 	Asm_缓冲CALL(603);
 	Asm_密包CALL(0, 3, false);
@@ -408,7 +414,7 @@ void __declspec(naked) Asm_领取胶囊()
 	__asm ret
 }
 
-void __declspec(naked) Asm_背包整理()
+NAKED Asm_背包整理()
 {
 	Asm_缓冲CALL(20);
 	Asm_密包CALL(6, 3, false);
@@ -422,7 +428,7 @@ void __declspec(naked) Asm_背包整理()
 	__asm ret
 }
 
-void __declspec(naked) Asm_存金入库()
+NAKED Asm_存金入库()
 {
 	Asm_缓冲CALL(307);
 	Asm_密包CALL(参数地址, 3, true);
@@ -430,7 +436,7 @@ void __declspec(naked) Asm_存金入库()
 	__asm ret
 }
 
-void __declspec(naked) Asm_组包剧情()
+NAKED Asm_组包剧情()
 {
 	Asm_缓冲CALL(16)
 	Asm_密包CALL(参数地址, 3, true)//地图ID
@@ -446,7 +452,7 @@ void __declspec(naked) Asm_组包剧情()
 	__asm ret
 }
 
-void __declspec(naked) Asm_释放CALL()
+NAKED Asm_释放CALL()
 {
 	__asm {
 
@@ -465,7 +471,7 @@ void __declspec(naked) Asm_释放CALL()
 	}
 }
 
-void __declspec(naked) Asm_技能CALL()
+NAKED Asm_技能CALL()
 {
 	__asm {
 		mov eax, 参数地址
@@ -480,7 +486,7 @@ void __declspec(naked) Asm_技能CALL()
 	}
 }
 
-void __declspec(naked) Asm_组包接受()
+NAKED Asm_组包接受()
 {
 	Asm_缓冲CALL(31);
 	Asm_密包CALL(31, 2, false);
@@ -489,7 +495,7 @@ void __declspec(naked) Asm_组包接受()
 	__asm ret
 }
 
-void __declspec(naked) Asm_组包完成()
+NAKED Asm_组包完成()
 {
 	Asm_缓冲CALL(33);
 	Asm_密包CALL(33, 2, false);
@@ -500,7 +506,7 @@ void __declspec(naked) Asm_组包完成()
 	__asm ret
 }
 
-void __declspec(naked) Asm_组包提交()
+NAKED Asm_组包提交()
 {
 	Asm_缓冲CALL(34);
 	Asm_密包CALL(34, 2, false);
@@ -512,7 +518,7 @@ void __declspec(naked) Asm_组包提交()
 	__asm ret
 }
 
-void __declspec(naked) Asm_区域CALL()
+NAKED Asm_区域CALL()
 {
 	__asm {
 		pushad
@@ -529,7 +535,7 @@ void __declspec(naked) Asm_区域CALL()
 }
 
 
-void Asm_测试组包()
+NAKED Asm_测试组包()
 {
 	Asm_缓冲CALL(599)
 	Asm_密包CALL(0, 1, false)
@@ -538,6 +544,7 @@ void Asm_测试组包()
 	Asm_密包CALL(266, 2, false)
 	Asm_密包CALL(65535, 2, false)
 	Asm_发包CALL()
+	__asm ret
 }
 
 void Send_组包拾取(int 物品地址, int x, int y, bool is_send)

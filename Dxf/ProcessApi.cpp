@@ -255,16 +255,16 @@ void ProcessApi::freeAllAlloc()
 	}
 }
 
-bool ProcessApi::createThread(int lpThreadAttributes, int lpStartAddress, LPVOID lpParameter = NULL)
+bool ProcessApi::createThread(int lpStartAddress, LPVOID lpParameter)
 {
-	if (!CreateRemoteThreadEx(hProcess, (LPSECURITY_ATTRIBUTES)lpThreadAttributes, 0, (LPTHREAD_START_ROUTINE)lpStartAddress, lpParameter, 0, NULL, 0)) {
+	if (!CreateRemoteThreadEx(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)lpStartAddress, lpParameter, 0, NULL, 0)) {
 		printf("创建线程失败！");
 		return false;
 	}
 	return true;
 }
 
-void ProcessApi::injectDll(LPCTSTR dll_path)
+int ProcessApi::injectDll(LPCTSTR dll_path)
 {
 	int addr = allocMemory(__FUNCTION__, MAX_PATH);
 	int fun_add = ToolsApi::getWinApiAddr("kernel32.dll", "LoadLibraryW");
@@ -272,14 +272,16 @@ void ProcessApi::injectDll(LPCTSTR dll_path)
 	if (result == false) {
 		printf("InjectDll Fail!\n");
 		system("pause");
-		return;
+		return 0;
 	}
-	if (createThread(fun_add, addr)) {
+	if (createThread(fun_add, (LPVOID)addr)) {
 		printf("注入成功！\n");
+		return addr;
 	}
 	else {
 		printf("创建线程失败！\n");
 		system("pause");
 	}
+	return 0;
 }
 
