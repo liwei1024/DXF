@@ -44,7 +44,7 @@ void ProcessApi::InitHookRestore()
 
 bool ProcessApi::readMemory(int lpBaseAddress, LPVOID lpBuffer, int nSize)
 {
-	int addr = ToolsApi::getWinApiAddr((LPCSTR)"ntdll.dll", (LPCSTR)"NtQueryVirtualMemory");
+	/*int addr = ToolsApi::getWinApiAddr((LPCSTR)"ntdll.dll", (LPCSTR)"NtQueryVirtualMemory");
 	SIZE_T lpNumberOfBytesRead;
 	vector<byte> buff;
 	if (addr) {
@@ -66,7 +66,17 @@ bool ProcessApi::readMemory(int lpBaseAddress, LPVOID lpBuffer, int nSize)
 			}
 		}
 	}
-	return false;
+	return false;*/
+	SIZE_T lpNumberOfBytesRead;
+	if (!ReadProcessMemory(hProcess, (LPCVOID)lpBaseAddress, lpBuffer, (SIZE_T)nSize, &lpNumberOfBytesRead)) {
+		printf("读取 %x 内存时失败！\n", lpBaseAddress);
+		return false;
+	}
+	if (lpNumberOfBytesRead != nSize) {
+		printf("读取 %x 内存时实际读取的长度与要读取的长度不一致！\n", lpBaseAddress);
+		return false;
+	}
+	return true;
 }
 
 byte ProcessApi::readByte(int lpBaseAddress)

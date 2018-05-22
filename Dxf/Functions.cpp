@@ -161,12 +161,12 @@ bool 背包装备遍历(背包装备 &装备)
 	return true;
 }
 
-void 装备处理()
+bool 装备处理()
 {
 	背包装备 装备;
 	if (背包装备遍历(装备) == false) {
 		printf("背包装备遍历 失败\n");
-		return;
+		return true;
 	}
 	int 装备地址, 装备属性, 装备名称地址;
 	for (int i = 0; i < 56; i++)
@@ -181,6 +181,7 @@ void 装备处理()
 				if (装备属性 == 0 || 装备属性 == 1 || 装备属性 == 2) {
 					printf(">>> 卖出 装备属性 %d 装备名称 %s \n", 装备属性, str.c_str());
 					Send_组包卖物(i + 9);
+					return false;
 				}
 				/*else if (装备属性 == 2) {
 					printf(">>> 分解 装备属性 %d 装备名称 %s \n", 装备属性, str.c_str());
@@ -191,7 +192,7 @@ void 装备处理()
 			delete[]装备名称;
 		}
 	}
-
+	return true;
 	//Send_背包整理();
 }
 
@@ -265,7 +266,14 @@ bool 剧情任务()
 			任务.任务条件 = pApi.readString(pApi.readInteger(任务.任务地址 + 700), 100);
 			任务.任务ID = pApi.readInteger(任务.任务地址);
 			string 任务条件(任务.任务条件);
-			if (任务.任务副本) {
+			if (
+				任务.任务副本 && 
+					(
+						任务条件.find("condition under clear") != -1 ||
+						任务条件.find("seeking") != -1 ||
+						任务条件.find("clear map") != -1 
+					)
+				) {
 				printf(">>>接取任务 任务ID: %d 任务副本：%d 任务条件: %s 任务名称：%s\n", 任务.任务ID, 任务.任务副本, 任务.任务条件, 任务.任务名称);
 				区域_CALL(任务.任务副本);
 				Sleep(500);
@@ -288,6 +296,7 @@ bool 剧情任务()
 				 
 				 完成任务(任务.任务ID);
 				 delete[]任务.任务条件;
+				 printf(">>>完成任务 任务ID: %d 任务副本：%d 任务条件: %s 任务名称：%s\n", 任务.任务ID, 任务.任务副本, 任务.任务条件, 任务.任务名称);
 				 return true;
 			}
 			else {

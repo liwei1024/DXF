@@ -12,7 +12,7 @@ Coordinate BOSS房间(void);
 
 bool 是否在BOSS房(void);
 
-void 装备处理();
+bool 装备处理();
 
 bool 是否开门();
 
