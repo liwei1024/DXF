@@ -154,7 +154,7 @@
     <ClInclude Include="BeastQuest.h" />
     <ClInclude Include="Functions.h" />
     <ClInclude Include="GetDirection.h" />
-    <ClInclude Include="graph.h" />
+    <ClInclude Include="Graph.h" />
     <ClInclude Include="KeyCode.h" />
     <ClInclude Include="ProcessApi.h" />
     <ClInclude Include="RemoteCall.h" />
@@ -171,7 +171,7 @@
     <ClCompile Include="Dxf.cpp" />
     <ClCompile Include="Functions.cpp" />
     <ClCompile Include="GetDirection.cpp" />
-    <ClCompile Include="graph.cpp" />
+    <ClCompile Include="Graph.cpp" />
     <ClCompile Include="ProcessApi.cpp" />
     <ClCompile Include="RemoteCall.cpp" />
     <ClCompile Include="stdafx.cpp">

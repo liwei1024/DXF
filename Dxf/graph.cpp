@@ -1,12 +1,12 @@
 #include "stdafx.h"
-#include "graph.h"
+#include "Graph.h"
 
 
-graph::graph()
+Graph::Graph()
 {
 }
 
 
-graph::~graph()
+Graph::~Graph()
 {
 }

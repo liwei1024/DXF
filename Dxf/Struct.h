@@ -87,3 +87,23 @@ struct 全局变量
 	int 刷图计次 = 0;
 	int 当前角色 = 0;
 };
+
+struct RoomInfo {
+	Coordinate coordinate;
+	Coordinate parent_coordinate;
+	int weight;
+	int numbering;
+	bool up;
+	bool bottom;
+	bool left;
+	bool right;
+};
+
+struct MapInfo {
+	int width;
+	int height;
+	const char * name;
+	vector<int> channel;
+	Coordinate start_coordinate;
+	Coordinate end_coordinate;
+};

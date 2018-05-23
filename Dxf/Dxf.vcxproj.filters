@@ -57,7 +57,7 @@
     <ClInclude Include="Test.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="graph.h">
+    <ClInclude Include="Graph.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -95,7 +95,7 @@
     <ClCompile Include="Test.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="graph.cpp">
+    <ClCompile Include="Graph.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

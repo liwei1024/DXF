@@ -1,8 +1,10 @@
 #pragma once
-class graph
+class Graph
 {
+private:
+
 public:
-	graph();
-	~graph();
+	Graph();
+	~Graph();
 };
 
